@@ -4,18 +4,18 @@ import { BookHttp } from '../../data-access/book.service';
 @Component({
   selector: 'app-book-list-item',
   template: `
-    @let book = input();
+    @let item = book();
     <div
-      class="p-3 flex flex-col border-b border-zinc-300 dark:border-zinc-800 dark:text-zinc-300 hover:cursor-pointer hover:bg-blue-50 dark:hover:bg-zinc-800"
+      class="p-3 flex flex-col border-b border-neutral-300 dark:border-neutral-800 hover:cursor-pointer hover:bg-blue-50 dark:hover:bg-neutral-800"
     >
       <div class="flex justify-between">
-        <span class="font-semibold">{{ book.title }}</span>
-        <span>{{ book.year }}</span>
+        <span class="font-semibold">{{ item.title }}</span>
+        <span>{{ item.year }}</span>
       </div>
-      <span class="text-sm">{{ book.authorName }}</span>
+      <span class="text-sm">{{ item.authorName }}</span>
     </div>
   `,
 })
 export class BookListItemComponent {
-  public readonly input = input.required<BookHttp>({ alias: 'book' });
+  public readonly book = input.required<BookHttp>();
 }

@@ -9,7 +9,7 @@ import { BookListItemComponent } from '../book-list-item/book-list-item.componen
     @if (books(); as books) { @for (book of books; track $index) {
     <app-book-list-item [book]="book" (click)="select.emit(book.id)" />
     } @empty {
-    <div class="mt-5 text-center text-zinc-400 text-sm">No books available</div>
+    <div class="mt-5 text-center text-sm">No books found</div>
     } } @else {
     <div>Loading...</div>
     }
@@ -23,10 +23,13 @@ import { BookListItemComponent } from '../book-list-item/book-list-item.componen
       overflow-y: auto;
       border-radius: 0.375rem;
       background-color: var(--color-white);
+      border-color: var(--color-neutral-300);
+      border-style: var(--tw-border-style);
+      border-width: 1px;
 
       &:where(.dark, .dark *) {
-        background-color: var(--color-zinc-900);
-        border-color: var(--color-zinc-800);
+        background-color: var(--color-neutral-900);
+        border-color: var(--color-neutral-700);
       }
     }
   `,

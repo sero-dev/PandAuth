@@ -20,9 +20,11 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 builder.Services.AddAuthentication().AddCookie(IdentityConstants.ApplicationScheme);
 builder.Services.AddAuthorization();
 
-builder.Services.AddCors(options => 
+builder.Services.AddCors(options =>
     options.AddDefaultPolicy(p => p
         .WithOrigins(builder.Configuration["Cors:Origin"] ?? throw new Exception("Missing Configuration [Cors:Origin]"))
+        .AllowAnyHeader()
+        .AllowAnyMethod()
     )
 );
 

@@ -11,9 +11,9 @@ import { Router } from '@angular/router';
   template: `
     <div class="h-screen w-screen flex flex-col justify-center items-center">
       <div
-        class="bg-white border border-zinc-400 rounded-md shadow-2xl py-8 px-14 max-w-xl w-full dark:bg-zinc-800 dark:border-none"
+        class="bg-white border border-neutral-400 rounded-md shadow-2xl py-8 px-14 max-w-xl w-full dark:bg-neutral-900 dark:border-none"
       >
-        <h1 class="text-4xl font-bold uppercase mt-5">Login</h1>
+        <h1 class="text-4xl font-semibold mt-5">Login</h1>
         <form [formGroup]="form" (submit)="onSubmit()" class="mt-5">
           <div class="flex flex-col gap-2">
             <input appInput formControlName="username" type="username" placeholder="Username" />

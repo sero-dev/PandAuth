@@ -1,5 +1,5 @@
 import { HttpClient, HttpResourceRef, httpResource } from '@angular/common/http';
-import { Injectable, inject } from '@angular/core';
+import { Injectable, Signal, inject } from '@angular/core';
 import { Observable } from 'rxjs';
 
 @Injectable({
@@ -13,14 +13,19 @@ export class BookService {
     return httpResource<BookHttp[]>(this.baseUrl);
   }
 
-  public get(id: number): Observable<BookHttp> {
-    const url = `${this.baseUrl}/${id}`;
-    return this.http.get<BookHttp>(url);
+  public get(id: Signal<number>): HttpResourceRef<BookHttp | undefined> {
+    return httpResource<BookHttp>(() => `${this.baseUrl}/${id()}`);
   }
 
-  public create(title: string, authorName?: string, year?: number): Observable<BookHttp> {
-    const body = { title, authorName, year };
+  public create(title: string, authorName?: string | null, year?: number | null): Observable<BookHttp> {
+    const body: CreateBookHttp = { title, authorName, year };
     return this.http.post<BookHttp>(this.baseUrl, body);
+  }
+
+  public update(id: number, title: string, authorName?: string | null, year?: number | null): Observable<BookHttp> {
+    const url = `${this.baseUrl}/${id}`;
+    const body: UpdateBookHttp = { id, title, authorName, year };
+    return this.http.put<BookHttp>(url, body);
   }
 
   public delete(id: number): Observable<BookHttp> {
@@ -29,7 +34,7 @@ export class BookService {
   }
 }
 
-export interface BookHttp {
+export interface BookHttp extends Auditable {
   id: number;
   title: string;
   authorName?: string;
@@ -38,6 +43,20 @@ export interface BookHttp {
 
 export interface CreateBookHttp {
   title: string;
-  authorName?: string;
-  year?: number;
+  authorName?: string | null;
+  year?: number | null;
+}
+
+export interface UpdateBookHttp {
+  id: number;
+  title: string;
+  authorName?: string | null;
+  year?: number | null;
+}
+
+export interface Auditable {
+  createdBy: string;
+  created: string;
+  lastModifiedBy?: string;
+  lastModified?: string;
 }

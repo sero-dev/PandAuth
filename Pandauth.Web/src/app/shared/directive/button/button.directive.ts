@@ -72,7 +72,7 @@ export class ButtonDirective {
       blue: {
         solid: 'border-transparent bg-blue-600 text-white hover:bg-blue-700 focus:bg-blue-700',
         outline:
-          'border-zinc-200 text-zinc-500 hover:border-blue-600 hover:text-blue-600 focus:text-blue-600 dark:border-neutral-700 dark:text-neutral-400 dark:hover:text-blue-500 dark:hover:border-blue-600 dark:focus:text-blue-500 dark:focus:border-blue-600',
+          'border-neutral-200 text-neutral-500 hover:border-blue-600 hover:text-blue-600 focus:text-blue-600 dark:border-neutral-700 dark:text-neutral-400 dark:hover:text-blue-500 dark:hover:border-blue-600 dark:focus:text-blue-500 dark:focus:border-blue-600',
         ghost:
           'border-transparent text-blue-600 hover:bg-blue-100 hover:text-blue-800 focus:bg-blue-100 focus:text-blue-800 dark:text-blue-500 dark:hover:bg-blue-800/30 dark:hover:text-blue-400 dark:focus:bg-blue-800/30 dark:focus:text-blue-400',
         soft: 'border-transparent bg-blue-100 text-blue-800 hover:bg-blue-200 focus:bg-blue-200 dark:text-blue-400 dark:bg-blue-800/30 dark:hover:bg-blue-800/20 dark:focus:bg-blue-800/20',
@@ -80,7 +80,7 @@ export class ButtonDirective {
       purple: {
         solid: 'border-transparent bg-indigo-600 text-white hover:bg-indigo-700 focus:bg-indigo-700',
         outline:
-          'border-zinc-200 text-zinc-500 hover:border-indigo-600 hover:text-indigo-600 focus:text-indigo-600 dark:border-neutral-700 dark:text-neutral-400 dark:hover:text-indigo-500 dark:hover:border-indigo-600 dark:focus:text-indigo-500 dark:focus:border-indigo-600',
+          'border-neutral-200 text-neutral-500 hover:border-indigo-600 hover:text-indigo-600 focus:text-indigo-600 dark:border-neutral-700 dark:text-neutral-400 dark:hover:text-indigo-500 dark:hover:border-indigo-600 dark:focus:text-indigo-500 dark:focus:border-indigo-600',
         ghost:
           'border-transparent text-indigo-600 hover:bg-indigo-100 hover:text-indigo-800 focus:bg-indigo-100 focus:text-indigo-800 dark:text-indigo-500 dark:hover:bg-indigo-800/30 dark:hover:text-indigo-400 dark:focus:bg-indigo-800/30 dark:focus:text-indigo-400',
         soft: 'border-transparent bg-indigo-100 text-indigo-800 hover:bg-indigo-200 focus:bg-indigo-200 dark:text-indigo-400 dark:bg-indigo-800/30 dark:hover:bg-indigo-800/20 dark:focus:bg-indigo-800/20',
@@ -93,6 +93,15 @@ export class ButtonDirective {
           'border-transparent text-red-500 hover:bg-red-100 focus:bg-red-100 hover:text-red-800 dark:hover:bg-red-800/30 dark:hover:text-red-400 dark:focus:bg-red-800/30 dark:focus:text-red-400',
         soft: 'border-transparent bg-red-100 text-red-800 hover:bg-red-200 focus:bg-red-200 dark:text-red-500 dark:bg-red-800/30 dark:hover:bg-red-800/20 dark:focus:bg-red-800/20',
       },
+      black: {
+        solid:
+          'border-transparent bg-neutral-800 text-white hover:bg-neutral-900 focus:bg-neutral-900 dark:bg-white dark:text-neutral-800',
+        outline:
+          'border-neutral-800 text-neutral-800 hover:border-neutral-500 hover:text-neutral-500 focus:border-neutral-500 focus:text-neutral-500 dark:border-white dark:text-white dark:hover:text-neutral-300 dark:hover:border-neutral-300',
+        ghost:
+          'border-transparent text-neutral-800 hover:bg-neutral-100 focus:bg-neutral-100 dark:text-white dark:hover:bg-neutral-700 dark:focus:bg-neutral-700',
+        soft: 'border-transparent bg-neutral-100 text-neutral-800 hover:bg-neutral-200 focus:bg-neutral-200 dark:bg-white/10 dark:text-white dark:hover:bg-white/20 dark:hover:text-white dark:focus:bg-white/20 dark:focus:text-white',
+      },
     },
     size: {
       sm: 'py-2 px-3',
@@ -102,13 +111,13 @@ export class ButtonDirective {
   };
 }
 
-type ClassLookup = {
+interface ClassLookup {
   base: string;
-  color: { [key in ButtonColor]: { [key in ButtonVariant]: string } };
-  size: { [key in ButtonSize]: string };
-};
+  color: Record<ButtonColor, Record<ButtonVariant, string>>;
+  size: Record<ButtonSize, string>;
+}
 
-export type ButtonColor = 'blue' | 'purple' | 'red';
+export type ButtonColor = 'blue' | 'purple' | 'red' | 'black';
 export type ButtonVariant = 'solid' | 'outline' | 'ghost' | 'soft';
 export type ButtonSize = 'sm' | 'md' | 'lg';
 export type ButtonIconPlacement = 'start' | 'end';

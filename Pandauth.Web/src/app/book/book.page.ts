@@ -13,9 +13,7 @@ import { Router, RouterLink, RouterOutlet } from '@angular/router';
     @let books = filterBooks();
     <div class="h-screen flex gap-2 p-2">
       <div class="w-96 rounded-md h-full flex flex-col gap-2">
-        <div class="bg-white rounded-md dark:bg-zinc-950">
-          <input appInput [(ngModel)]="searchText" type="text" placeholder="Search for book..." />
-        </div>
+        <input appInput [(ngModel)]="searchText" type="text" placeholder="Search by book title..." />
         <app-book-list [books]="books" (select)="onBookSelected($event)" />
         <button appButton icon="plus" routerLink="create">Create a new book</button>
       </div>
@@ -31,8 +29,18 @@ export class BookPage {
   protected readonly books = inject(BookService).getAll();
   protected readonly searchText = model<string>('');
 
+  public refresh() {
+    this.books.reload();
+  }
+
   protected readonly filterBooks = computed(() => {
-    return this.books.value()?.filter(b => b.title.includes(this.searchText()))
+    const books = this.books.value();
+    const searchText = this.searchText();
+
+    if (!books) return;
+    if (!searchText) return books;
+
+    return books.filter(b => b.title.toLowerCase().includes(searchText.toLowerCase()));
   });
 
   protected onBookSelected(id: number) {

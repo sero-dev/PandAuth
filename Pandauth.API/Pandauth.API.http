@@ -18,5 +18,17 @@ Content-Type: application/json
   "authorName": "Michael Gathwright"
 }
 
+
+### Update Book
+PUT {{BaseUrl}}/books/3
+Content-Type: application/json
+
+{
+  "id": 3
+  "title": "Inception",
+  "year": 2014,
+  "authorName": "Christopher Nolan"
+}
+
 ### Delete Book By ID
 DELETE {{BaseUrl}}/books/7
