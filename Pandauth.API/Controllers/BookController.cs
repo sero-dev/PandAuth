@@ -1,12 +1,13 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Pandauth.API.Domain;
-using System.Diagnostics;
 
 namespace Pandauth.API.Controllers;
 
 [ApiController]
 [Route("api/books")]
+[Authorize]
 public class BookController(ApplicationDbContext context) : ControllerBase
 {
     [HttpGet]
@@ -25,14 +26,15 @@ public class BookController(ApplicationDbContext context) : ControllerBase
     }
 
     [HttpPost]
-    public async Task<IActionResult> Create([FromBody] CreateBookDto request)
+    public async Task<IActionResult> Create([FromBody] CreateBookRequest request)
     {
+
         var newBook = context.Books.Add(new Book
         {
             Title = request.Title,
             Year = request.Year,
             AuthorName = request.AuthorName,
-            CreatedBy = string.Empty,
+            CreatedBy = ""
         });
 
         await context.SaveChangesAsync();
@@ -40,7 +42,7 @@ public class BookController(ApplicationDbContext context) : ControllerBase
     }
 
     [HttpPut("{id}")]
-    public async Task<IActionResult> Update(int id, [FromBody] UpdateBookDto request)
+    public async Task<IActionResult> Update(int id, [FromBody] UpdateBookRequest request)
     {
         if (id != request.Id) return BadRequest("Request Body ID does not match route ID");
 
@@ -70,16 +72,14 @@ public class BookController(ApplicationDbContext context) : ControllerBase
     }
 }
 
-[DebuggerDisplay("{Title} ({Year})")]
-public class CreateBookDto
+public class CreateBookRequest
 {
     public required string Title { get; set; }
     public int? Year { get; set; }
     public string? AuthorName { get; set; }
 }
 
-[DebuggerDisplay("{Id}: {Title} ({Year})")]
-public class UpdateBookDto
+public class UpdateBookRequest
 {
     public int Id { get; set; }
     public required string Title { get; set; }

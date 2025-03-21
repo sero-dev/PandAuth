@@ -14,11 +14,9 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
             switch (entry.State)
             {
                 case EntityState.Added:
-                    entry.Entity.CreatedBy = "Sean Rodriguez";
                     entry.Entity.Created = DateTime.Now;
                     break;
                 case EntityState.Modified:
-                    entry.Entity.LastModifiedBy = "Sean Rodriguez";
                     entry.Entity.LastModified = DateTime.Now;
                     break;
             }

@@ -1,12 +1,19 @@
-using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using Pandauth.API;
+using Pandauth.API.Options;
 
 var builder = WebApplication.CreateBuilder(args);
+var config = builder.Configuration;
 
-// Add services to the container.
+builder.Services.AddOptions<CorsOptions>()
+    .Bind(config.GetRequiredSection(CorsOptions.SectionName))
+    .ValidateOnStart();
 
-builder.Services.AddControllers();
+builder.Services.AddOptions<JwtOptions>()
+    .Bind(config.GetRequiredSection(JwtOptions.SectionName))
+    .ValidateOnStart();
 
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
 {
@@ -17,24 +24,44 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlite($"Data Source={dbPath}");
 });
 
-builder.Services.AddAuthentication().AddCookie(IdentityConstants.ApplicationScheme);
 builder.Services.AddAuthorization();
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(options =>
+    {
+        var jwtOptions = config.GetSection(JwtOptions.SectionName).Get<JwtOptions>() ?? throw new Exception("JwtOptions was not set");
+
+        options.Authority = jwtOptions.Issuer;
+        options.RequireHttpsMetadata = false;
+
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuerSigningKey = true,
+            ValidateLifetime = true,
+            ValidateIssuer = true,
+            ValidateAudience = true,
+            ValidIssuer = jwtOptions.Issuer,
+            ValidAudience = jwtOptions.Audience,
+        };
+    });
 
 builder.Services.AddCors(options =>
+{
+    var corsOptions = config.GetSection(CorsOptions.SectionName).Get<CorsOptions>() ?? throw new Exception("CorsOptions was not set");
     options.AddDefaultPolicy(p => p
-        .WithOrigins(builder.Configuration["Cors:Origin"] ?? throw new Exception("Missing Configuration [Cors:Origin]"))
+        .WithOrigins(corsOptions?.AllowedOrigins ?? [])
         .AllowAnyHeader()
         .AllowAnyMethod()
-    )
-);
+    );
+});
+
+builder.Services.AddControllers();
 
 var app = builder.Build();
-
-// Configure the HTTP request pipeline.
 
 app.UseHttpsRedirection();
 
 app.UseCors();
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
